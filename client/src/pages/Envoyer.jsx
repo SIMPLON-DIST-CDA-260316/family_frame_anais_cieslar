@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { API_URL } from "../config.js";
 
 function Envoyer() {
   const [pseudo, setPseudo] = useState("");
   const [fichier, setFichier] = useState(null);
   const [apercu, setApercu] = useState(null);
+  const [envoiEnCours, setEnvoiEnCours] = useState(false);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     if (!apercu) return;
@@ -15,11 +18,35 @@ function Envoyer() {
     if (!file) return;
     setFichier(file);
     setApercu(URL.createObjectURL(file));
+    setMessage(null);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log("À envoyer :", pseudo.trim(), fichier);
+
+    const formData = new FormData();
+    formData.append("pseudo", pseudo.trim());
+    formData.append("photo", fichier);
+
+    setEnvoiEnCours(true);
+    setMessage(null);
+
+    try {
+      const res = await fetch(`${API_URL}/api/photos`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error);
+      }
+      setMessage("Photo envoyée !");
+    } catch (err) {
+      setMessage(`Erreur : ${err.message}`);
+    } finally {
+      setEnvoiEnCours(false);
+    }
   }
 
   return (
@@ -50,9 +77,11 @@ function Envoyer() {
 
         {apercu && <img className="apercu" src={apercu} alt="Aperçu" />}
 
-        <button type="submit" disabled={!pseudo.trim() || !fichier}>
-          Envoyer
+        <button type="submit" disabled={!pseudo.trim() || !fichier || envoiEnCours}>
+          {envoiEnCours ? "Envoi…" : "Envoyer"}
         </button>
+
+        {message && <p>{message}</p>}
       </form>
     </main>
   );
