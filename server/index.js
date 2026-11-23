@@ -1,8 +1,10 @@
 import "dotenv/config";
+import http from "node:http";
 import express from "express";
 import cors from "cors";
 import multer from "multer";
 import sharp from "sharp";
+import { Server } from "socket.io";
 import { envoyerVersCloudinary } from "./cloudinary.js";
 import { prisma } from "./prisma.js";
 
@@ -47,6 +49,15 @@ const upload = multer({
 });
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: CLIENT_URL } });
+
+io.on("connection", (socket) => {
+  console.log(`Cadre connecté : ${socket.id}`);
+  socket.on("disconnect", () => {
+    console.log(`Cadre déconnecté : ${socket.id}`);
+  });
+});
 
 app.use(cors({ origin: CLIENT_URL }));
 app.use(express.json());
@@ -81,6 +92,7 @@ app.post("/api/photos", upload.single("photo"), async (req, res) => {
 
   console.log(`Photo de ${pseudo} : ${info.width}x${info.height} → ${photo.url}`);
 
+  io.emit("new-photo", photo);
   res.status(201).json(photo);
 });
 
@@ -109,6 +121,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Erreur serveur" });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`API sur http://localhost:${PORT}`);
 });
