@@ -1,0 +1,21 @@
+main {
+  padding: 1rem;
+}
+
+.formulaire {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 400px;
+}
+
+.formulaire label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.apercu {
+  max-width: 100%;
+  border-radius: 8px;
+}
