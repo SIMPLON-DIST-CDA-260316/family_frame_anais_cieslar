@@ -2,13 +2,34 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import multer from "multer";
+import sharp from "sharp";
 
 const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
-const TYPES_ACCEPTES = ["image/jpeg", "image/png", "image/webp", "image/heic"];
+const TYPES_ACCEPTES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 const TAILLE_MAX = 10 * 1024 * 1024;
 const PSEUDO_MAX = 30;
+const DIMENSION_MAX = 1920;
+
+async function traiterImage(buffer) {
+  try {
+    return await sharp(buffer)
+      .rotate()
+      .resize({
+        width: DIMENSION_MAX,
+        height: DIMENSION_MAX,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .jpeg({ quality: 80 })
+      .toBuffer({ resolveWithObject: true });
+  } catch {
+    const err = new Error("Le fichier n'est pas une image valide");
+    err.status = 415;
+    throw err;
+  }
+}
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -32,7 +53,7 @@ app.get("/api/health", (req, res) => {
   res.json({ ok: true });
 });
 
-app.post("/api/photos", upload.single("photo"), (req, res) => {
+app.post("/api/photos", upload.single("photo"), async (req, res) => {
   const pseudo = req.body?.pseudo?.trim();
 
   if (!pseudo) {
@@ -45,12 +66,18 @@ app.post("/api/photos", upload.single("photo"), (req, res) => {
     return res.status(400).json({ error: "Photo manquante" });
   }
 
-  console.log(`Photo reçue de ${pseudo} : ${req.file.mimetype}, ${req.file.size} octets`);
+  const { data, info } = await traiterImage(req.file.buffer);
+
+  console.log(
+    `Photo de ${pseudo} : ${req.file.mimetype} ${req.file.size} octets → jpeg ${info.width}x${info.height} ${data.length} octets`,
+  );
 
   res.status(201).json({
     pseudo,
-    type: req.file.mimetype,
-    taille: req.file.size,
+    largeur: info.width,
+    hauteur: info.height,
+    tailleAvant: req.file.size,
+    tailleApres: data.length,
   });
 });
 
