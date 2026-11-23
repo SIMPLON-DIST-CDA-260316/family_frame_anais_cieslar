@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import { API_URL } from "../config.js";
 import "./Cadre.css";
 
@@ -38,6 +39,18 @@ function Cadre() {
     chargerDernierePhoto();
   }, []);
 
+  useEffect(() => {
+    const socket = io(API_URL || undefined);
+
+    socket.on("new-photo", (nouvellePhoto) => {
+      setImageChargee(false);
+      setPhoto(nouvellePhoto);
+      setStatut("ok");
+    });
+
+    return () => socket.disconnect();
+  }, []);
+
   return (
     <div className="cadre">
       {statut === "chargement" && <p className="cadre-message">Chargement…</p>}
@@ -57,6 +70,7 @@ function Cadre() {
             style={{ backgroundImage: `url(${photo.url})` }}
           />
           <img
+            key={photo.id}
             className={`cadre-photo ${imageChargee ? "visible" : ""}`}
             src={photo.url}
             alt={`Photo envoyée par ${photo.pseudo}`}
