@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import multer from "multer";
 import sharp from "sharp";
+import { envoyerVersCloudinary } from "./cloudinary.js";
 
 const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
@@ -67,17 +68,16 @@ app.post("/api/photos", upload.single("photo"), async (req, res) => {
   }
 
   const { data, info } = await traiterImage(req.file.buffer);
+  const resultat = await envoyerVersCloudinary(data);
 
   console.log(
-    `Photo de ${pseudo} : ${req.file.mimetype} ${req.file.size} octets → jpeg ${info.width}x${info.height} ${data.length} octets`,
+    `Photo de ${pseudo} : ${info.width}x${info.height}, ${data.length} octets → ${resultat.secure_url}`,
   );
 
   res.status(201).json({
     pseudo,
-    largeur: info.width,
-    hauteur: info.height,
-    tailleAvant: req.file.size,
-    tailleApres: data.length,
+    url: resultat.secure_url,
+    publicId: resultat.public_id,
   });
 });
 
