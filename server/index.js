@@ -4,6 +4,7 @@ import cors from "cors";
 import multer from "multer";
 import sharp from "sharp";
 import { envoyerVersCloudinary } from "./cloudinary.js";
+import { prisma } from "./prisma.js";
 
 const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
@@ -70,15 +71,28 @@ app.post("/api/photos", upload.single("photo"), async (req, res) => {
   const { data, info } = await traiterImage(req.file.buffer);
   const resultat = await envoyerVersCloudinary(data);
 
-  console.log(
-    `Photo de ${pseudo} : ${info.width}x${info.height}, ${data.length} octets → ${resultat.secure_url}`,
-  );
-
-  res.status(201).json({
-    pseudo,
-    url: resultat.secure_url,
-    publicId: resultat.public_id,
+  const photo = await prisma.photo.create({
+    data: {
+      url: resultat.secure_url,
+      publicId: resultat.public_id,
+      pseudo,
+    },
   });
+
+  console.log(`Photo de ${pseudo} : ${info.width}x${info.height} → ${photo.url}`);
+
+  res.status(201).json(photo);
+});
+
+app.get("/api/photos/latest", async (req, res) => {
+  const photo = await prisma.photo.findFirst({
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (!photo) {
+    return res.status(404).json({ error: "Aucune photo" });
+  }
+  res.json(photo);
 });
 
 app.use((err, req, res, next) => {
