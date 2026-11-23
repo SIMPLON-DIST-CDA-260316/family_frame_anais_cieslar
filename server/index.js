@@ -1,18 +1,19 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import http from "http";
-import { Server } from "socket.io";
+
+const PORT = process.env.PORT || 3000;
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
 const app = express();
-app.use(cors());
 
-app.get("/api/health", (req, res) => res.json({ ok: true }));
+app.use(cors({ origin: CLIENT_URL }));
+app.use(express.json());
 
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-
-io.on("connection", (socket) => {
-    console.log("client connecté", socket.id);
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true });
 });
 
-server.listen(3000, () => console.log("API sur http://localhost:3000"));
+app.listen(PORT, () => {
+  console.log(`API sur http://localhost:${PORT}`);
+});
