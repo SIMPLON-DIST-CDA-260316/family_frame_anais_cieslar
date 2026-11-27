@@ -1,77 +1,95 @@
-/* Écran noir plein écran, découpé en 2 lignes :
-   la photo (prend toute la place restante) puis la légende */
+/* Écran noir plein écran. Les photos sont placées en position absolue :
+   leurs coordonnées sont calculées par utils/mosaique.js */
 .cadre {
   position: fixed;
   inset: 0;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  gap: clamp(16px, 3vh, 32px);
-  /* marges noires autour de la photo : haut, côtés, bas */
-  padding: clamp(24px, 6vh, 64px) clamp(16px, 5vw, 64px) clamp(20px, 4vh, 40px);
+  overflow: hidden;
   background: #000;
   color: #fff;
 }
 
-/* ---------- Photo ---------- */
-
-.cadre-zone-photo {
-  min-height: 0; /* autorise la ligne de la grille à rétrécir */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* ---------- Photos ---------- */
 
 .cadre-photo {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  opacity: 0;
-  transform: scale(0.98);
-  transition: opacity 1.2s ease, transform 1.2s ease;
-}
-
-.cadre-photo.visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ---------- Légende ---------- */
-
-.cadre-surtitre {
+  position: absolute;
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #e5e5e5;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  /* quand une photo arrive, les autres glissent vers leur nouvelle place */
+  transition:
+    left 0.8s ease,
+    top 0.8s ease,
+    width 0.8s ease,
+    height 0.8s ease;
+  /* une photo qui apparaît (nouvelle clé React) arrive en fondu */
+  animation: apparition 1.2s ease;
+}
+
+.cadre-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* la case a déjà le bon format : rien n'est coupé */
+}
+
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* ---------- Étiquette pseudo + date ---------- */
+
+.cadre-etiquette {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 5px 8px;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .cadre-pseudo {
-  margin: 6px 0 0;
-  font-size: clamp(2rem, 4.5vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.04em;
+  font-weight: 700;
 }
 
 .cadre-date {
-  margin: 12px 0 0;
-  font-size: clamp(1rem, 1.6vw, 1.25rem);
-  font-weight: 600;
-  color: #e5e5e5;
+  font-size: 11px;
+  font-weight: 500;
+  color: #d4d4d4;
+}
+
+.cadre-etiquette.petit .cadre-pseudo {
+  font-size: 12px;
+}
+
+.cadre-etiquette.moyen .cadre-pseudo {
+  font-size: 15px;
+}
+
+.cadre-etiquette.large .cadre-pseudo {
+  font-size: 19px;
+}
+
+.cadre-etiquette.large .cadre-date {
+  font-size: 13px;
 }
 
 /* ---------- "En direct" ---------- */
 
 .cadre-direct {
   position: absolute;
-  top: clamp(8px, 2vh, 24px);
-  right: clamp(16px, 5vw, 64px);
+  top: 12px;
+  right: clamp(16px, 4vw, 48px);
   display: flex;
   align-items: center;
   gap: 8px;
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -87,9 +105,10 @@
 /* ---------- Messages (chargement, vide, erreur) ---------- */
 
 .cadre-message {
-  grid-row: 1 / -1;
-  align-self: center;
-  justify-self: center;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   margin: 0;
   font-size: clamp(1.25rem, 2.5vw, 2rem);
   font-weight: 600;
