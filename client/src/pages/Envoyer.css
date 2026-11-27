@@ -1,0 +1,243 @@
+/* ---------- Mise en page ---------- */
+
+.page-envoyer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 8px 24px 24px;
+}
+
+.formulaire {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---------- Titre et description ---------- */
+
+.intro h1 {
+  margin: 0 0 6px;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.intro p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--texte-doux);
+}
+
+/* ---------- Champs ---------- */
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.champ label,
+.champ-titre {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.champ input[type="text"] {
+  height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--bordure);
+  border-radius: 12px;
+  background: var(--fond-champ);
+  font: inherit;
+  font-size: 16px; /* 16px minimum : évite le zoom automatique sur iPhone */
+  color: var(--texte);
+}
+
+.champ input[type="text"]:focus {
+  outline: 2px solid var(--lien);
+  outline-offset: 1px;
+}
+
+/* ---------- Zone photo ---------- */
+
+.zone-photo {
+  display: flex;
+  justify-content: center;
+}
+
+/* Le conteneur prend exactement la taille de la photo :
+   pas de fond visible autour, et "Changer" reste posé sur la photo */
+.apercu-conteneur {
+  position: relative;
+}
+
+.apercu {
+  display: block;
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 16px;
+}
+
+.zone-vide {
+  width: 100%;
+  height: 300px;
+  border-radius: 16px;
+  background: var(--fond-gris);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--texte-doux);
+}
+
+.bouton-changer {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.75);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.choix-photo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.bouton-gris {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--fond-gris);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bouton-gris:hover {
+  background: #e4e4e4;
+}
+
+/* Quand l'input caché a le focus clavier, on montre le contour sur son label */
+.visuellement-cache:focus-visible + .bouton-gris {
+  outline: 2px solid var(--lien);
+  outline-offset: 2px;
+}
+
+/* ---------- Boutons d'action ---------- */
+
+.bouton-principal {
+  margin-top: auto; /* pousse le bouton en bas de l'écran */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 56px;
+  border: none;
+  border-radius: var(--rayon);
+  background: var(--degrade);
+  color: #fff;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bouton-principal:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.bouton-secondaire {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  border-radius: var(--rayon);
+  background: var(--fond-gris);
+  color: var(--texte);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.erreur {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fdecec;
+  color: #b42318;
+  font-size: 14px;
+}
+
+/* ---------- Écran de confirmation ---------- */
+
+.confirmation {
+  align-items: center;
+  gap: 28px;
+  padding-top: 40px;
+  text-align: center;
+}
+
+.polaroid {
+  position: relative;
+  width: 240px;
+  height: 300px;
+}
+
+.polaroid-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 8px solid #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(10, 10, 10, 0.14);
+  transform: rotate(-3deg);
+}
+
+.polaroid-coche {
+  position: absolute;
+  right: -14px;
+  bottom: -14px;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 4px solid #fff;
+  border-radius: 999px;
+  background: var(--degrade);
+  color: #fff;
+}
+
+.actions {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actions .bouton-principal {
+  margin-top: 0;
+}

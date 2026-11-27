@@ -1,10 +1,38 @@
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+:root {
+  --texte: #0a0a0a;
+  --texte-doux: #737373;
+  --fond: #ffffff;
+  --fond-gris: #efefef;
+  --fond-champ: #fafafa;
+  --bordure: #dbdbdb;
+  --lien: #962fbf;
+  --degrade: linear-gradient(90deg, #fcaf45, #d62976, #962fbf);
+  --rayon: 14px;
 }
 
-nav {
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: var(--texte);
+  background: var(--fond);
+}
+
+#root {
+  min-height: 100dvh;
   display: flex;
-  gap: 1rem;
-  padding: 1rem;
+  flex-direction: column;
+}
+
+/* Cache un élément à l'écran mais le laisse accessible au clavier et aux lecteurs d'écran */
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
