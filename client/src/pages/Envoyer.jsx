@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../config.js";
 import {
-  IconeAppareil,
   IconeChanger,
   IconeCoche,
   IconeFleche,
@@ -118,50 +117,32 @@ function Envoyer() {
         <div className="champ">
           <span className="champ-titre">Photo</span>
 
+          {/* Input caché, sans "capture" : sur mobile, le téléphone propose
+              de prendre une photo OU d'en choisir une dans la galerie.
+              Les <label htmlFor="photo"> l'ouvrent au clic. */}
+          <input
+            id="photo"
+            className="visuellement-cache"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+
           <div className="zone-photo">
             {apercu ? (
               <div className="apercu-conteneur">
                 <img className="apercu" src={apercu} alt="Aperçu de la photo choisie" />
-                <label htmlFor="photo-galerie" className="bouton-changer">
+                <label htmlFor="photo" className="bouton-changer">
                   <IconeChanger taille={16} />
                   Changer
                 </label>
               </div>
             ) : (
-              <div className="zone-vide">
+              <label htmlFor="photo" className="zone-vide">
                 <IconeImage taille={40} />
-                <span>Aucune photo choisie</span>
-              </div>
+                <span>Ajouter une photo</span>
+              </label>
             )}
-          </div>
-
-          {/* Deux inputs cachés : un ouvre l'appareil photo, l'autre la galerie.
-              Les <label> stylés en boutons les déclenchent au clic. */}
-          <div className="choix-photo">
-            <input
-              id="photo-appareil"
-              className="visuellement-cache"
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={handleFileChange}
-            />
-            <label htmlFor="photo-appareil" className="bouton-gris">
-              <IconeAppareil />
-              Prendre
-            </label>
-
-            <input
-              id="photo-galerie"
-              className="visuellement-cache"
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-            <label htmlFor="photo-galerie" className="bouton-gris">
-              <IconeImage />
-              Galerie
-            </label>
           </div>
         </div>
 

@@ -85,18 +85,28 @@
   border-radius: 16px;
 }
 
+/* La zone vide est un <label> : un clic dessus ouvre le choix de photo */
 .zone-vide {
   width: 100%;
   height: 300px;
+  border: 2px dashed var(--bordure);
   border-radius: 16px;
-  background: var(--fond-gris);
+  background: var(--fond-champ);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
   color: var(--texte-doux);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.zone-vide:hover {
+  border-color: var(--lien);
+  background: var(--fond-gris);
 }
 
 .bouton-changer {
@@ -116,31 +126,9 @@
   cursor: pointer;
 }
 
-.choix-photo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.bouton-gris {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 48px;
-  border-radius: 12px;
-  background: var(--fond-gris);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.bouton-gris:hover {
-  background: #e4e4e4;
-}
-
 /* Quand l'input caché a le focus clavier, on montre le contour sur son label */
-.visuellement-cache:focus-visible + .bouton-gris {
+.visuellement-cache:focus-visible + .zone-photo .zone-vide,
+.visuellement-cache:focus-visible + .zone-photo .bouton-changer {
   outline: 2px solid var(--lien);
   outline-offset: 2px;
 }
