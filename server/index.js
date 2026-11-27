@@ -87,6 +87,8 @@ app.post("/api/photos", upload.single("photo"), async (req, res) => {
       url: resultat.secure_url,
       publicId: resultat.public_id,
       pseudo,
+      width: info.width,
+      height: info.height,
     },
   });
 
@@ -105,6 +107,16 @@ app.get("/api/photos/latest", async (req, res) => {
     return res.status(404).json({ error: "Aucune photo" });
   }
   res.json(photo);
+});
+
+const NOMBRE_RECENTES = 6;
+
+app.get("/api/photos/recent", async (req, res) => {
+  const photos = await prisma.photo.findMany({
+    orderBy: { createdAt: "desc" },
+    take: NOMBRE_RECENTES,
+  });
+  res.json(photos);
 });
 
 app.use((err, req, res, next) => {

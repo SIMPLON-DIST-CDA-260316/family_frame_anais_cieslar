@@ -12,6 +12,9 @@ model Photo {
   url       String
   publicId  String
   pseudo    String
+  // Dimensions après traitement Sharp (optionnelles : les anciennes photos ne les ont pas)
+  width     Int?
+  height    Int?
   createdAt DateTime @default(now())
 
   @@index([createdAt])

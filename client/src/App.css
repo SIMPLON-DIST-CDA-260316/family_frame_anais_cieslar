@@ -1,21 +1,42 @@
-main {
-  padding: 1rem;
-}
-
-.formulaire {
+.entete {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 400px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 24px;
 }
 
-.formulaire label {
+.logo {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--texte);
+  text-decoration: none;
 }
 
-.apercu {
-  max-width: 100%;
-  border-radius: 8px;
+.logo-carre {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--degrade);
+  color: #fff;
+}
+
+.entete-lien {
+  padding: 12px 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--lien);
+  text-decoration: none;
+}
+
+.entete-lien:hover {
+  text-decoration: underline;
 }
